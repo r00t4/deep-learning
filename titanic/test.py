@@ -16,16 +16,13 @@ net.load_state_dict(torch.load('./model.pth'))
 testData=pd.read_csv('./test.csv')
 test=testData.copy()
 test['Age']=test['Age'].fillna(test["Age"].median())
-test['Fare']=test['Fare'].fillna(test["Fare"].median())
+test['Embarked']=test['Embarked'].fillna('C')
 test.loc[test['Sex']=='female','Sex']=0
 test.loc[test['Sex']=='male','Sex']=1
 test.loc[test['Embarked']=='C','Embarked']=1
 test.loc[test['Embarked']=='Q','Embarked']=2
 test.loc[test['Embarked']=='S','Embarked']=3
-test_x=test.loc[:,['Pclass','Age','Sex','SibSp','Parch','Fare','Embarked']]
-
-gender_submission=pd.read_csv('./gender_submission.csv')
-test_y=gender_submission['Survived']
+test_x=test.loc[:,['Pclass','Age','Sex','SibSp','Parch','Embarked']]
 
 
 ans = list()
@@ -36,8 +33,12 @@ for i,j in test_x.iterrows():
 	
 	pred = net(x)
 	pred = pred.data.numpy()
-	print(pred[0].argmax())
-	ans.append(pred[0].argmax())
+	print(pred[0])
+	if (pred[0] >= 0.5):
+		ans.append(1)
+	else:
+		ans.append(0)
+	# ans.append(pred[0].argmax())
 
 d = { 'PassengerId': test['PassengerId'], 'Survived': ans}
 df = pd.DataFrame(d)

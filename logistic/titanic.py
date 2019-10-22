@@ -1,9 +1,5 @@
 import pandas as pd
 import numpy as np
-from sklearn import preprocessing
-from sklearn.linear_model import LogisticRegression
-from sklearn.ensemble import AdaBoostClassifier
-from sklearn.metrics import roc_auc_score,accuracy_score
 
 trainData=pd.read_csv('./train.csv')
 gender_submission=pd.read_csv('./gender_submission.csv')
@@ -53,11 +49,11 @@ for _ in range(1000):
     for i in range(dt.size):
         dt[i] /= len(train_x)
 
-    # for i in range(v.size):
-    #     v[i] = 0.95*v[i] + (1-0.95)*dt[i]
+    for i in range(v.size):
+        v[i] = 0.99*v[i] + (1-0.99)*dt[i]
 
     for i in range(theta.size):
-        theta[i] -= lr*dt[i]
+        theta[i] -= lr*v[i]
 
 
 print("test starting")

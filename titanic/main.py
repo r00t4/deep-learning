@@ -19,9 +19,9 @@ net = NeuralNetwork()
 criterion = nn.BCELoss()
 optimizer = optim.SGD(net.parameters(),
                       lr=0.00001,
-                      momentum=0.98)
+                      momentum=0.92)
 
-nepoch = 30
+nepoch = 500
 for epoch in range(nepoch):
     running_loss = 0.0
     for X, Y in data_loader:
@@ -30,7 +30,7 @@ for epoch in range(nepoch):
         pred = net(X)
 
         loss = criterion(pred, Y)
-
+        # print(Y)
         loss.backward()
         optimizer.step()
 
